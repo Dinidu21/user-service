@@ -1,0 +1,40 @@
+name: Bump parent submodule pointer
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bump-parent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout parent repo
+        uses: actions/checkout@v4
+        with:
+          repository: Dinidu21/backend-services
+          token: ${{ secrets.PARENT_PAT }}
+          fetch-depth: 0
+          submodules: true
+
+      - name: Update submodule pointer to latest main
+        run: |
+          git -C "user-service" fetch origin main
+          git -C "user-service" checkout origin/main
+
+      - name: Open PR against parent
+        id: pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.PARENT_PAT }}
+          commit-message: "chore: bump user-service submodule"
+          branch: "bump/user-service"
+          title: "chore: bump user-service submodule"
+          body: |
+            Automated submodule pointer bump.
+
+            Source repository: Dinidu21/user-service
+            Parent repository: Dinidu21/backend-services
+            Triggered by push to user-service/main.
+
+          delete-branch: true
