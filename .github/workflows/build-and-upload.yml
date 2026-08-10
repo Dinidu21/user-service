@@ -20,11 +20,11 @@ jobs:
 
     environment: production
 
-    env:
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-      GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
-      GCP_SERVICE_ACCOUNT: ${{ vars.GCP_SERVICE_ACCOUNT }}
-      GCS_BUCKET: ${{ vars.GCS_BUCKET }}
+  env:
+    GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+    GCP_WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
+    GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+    GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
 
     steps:
       - name: Checkout
