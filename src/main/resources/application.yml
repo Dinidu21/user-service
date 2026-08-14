@@ -2,8 +2,8 @@ spring:
   application:
     name: user-service # must match the filename in config-repo exactly
   config:
-    import: "configserver:http://localhost:8888"
+    import: "configserver:http://config-server.eventsphere.internal:8888"
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server.eventsphere.internal:8761/eureka/
