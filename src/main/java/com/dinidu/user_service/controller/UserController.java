@@ -6,6 +6,8 @@ import com.dinidu.user_service.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
 
@@ -17,16 +19,66 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
-        User user = userService.register(req.getEmail(), req.getPassword(), req.getRole());
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getRole().name()));
+        User user = userService.register(
+                req.getEmail(),
+                req.getPassword(),
+                req.getRole());
+
+        return ResponseEntity.ok(toResponse(user));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody RegisterRequest req) {
-        User user = userService.login(req.getEmail(), req.getPassword());
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail(), user.getRole().name()));
+        User user = userService.login(
+                req.getEmail(),
+                req.getPassword());
+
+        return ResponseEntity.ok(toResponse(user));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(
+                userService.getAllUsers()
+                        .stream()
+                        .map(this::toResponse)
+                        .toList());
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(toResponse(userService.getUserById(id)));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequest req) {
+
+        User user = userService.updateUser(
+                id,
+                req.email(),
+                req.role());
+
+        return ResponseEntity.ok(toResponse(user));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getRole().name());
     }
 
     record UserResponse(Long id, String email, String role) {
+    }
+
+    record UpdateUserRequest(String email, String role) {
     }
 }
