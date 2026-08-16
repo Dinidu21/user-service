@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok(toResponse(user));
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(
                 userService.getAllUsers()
@@ -45,12 +45,13 @@ public class UserController {
                         .toList());
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(toResponse(userService.getUserById(id)));
+        return ResponseEntity.ok(
+                toResponse(userService.getUserById(id)));
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
             @RequestBody UpdateUserRequest req) {
@@ -63,7 +64,7 @@ public class UserController {
         return ResponseEntity.ok(toResponse(user));
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
